@@ -1,0 +1,75 @@
+package com.travellerapp.rest.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.travellerapp.cdd.Employee;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.travellerapp.business.TravellerServiceImpl;
+import com.travellerapp.domain.Traveller;
+import com.travellerapp.rest.model.TravellerDTO;
+
+@RestController
+@RequestMapping(path = "/travellers")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
+public class TravelController 
+{
+	@Autowired
+	private TravellerServiceImpl travellerService;
+	 
+	 
+	@Value("${welcome.message}")
+	private String welcomeMessage;
+	
+    @GetMapping(path="/", produces = "application/json")
+    public List<TravellerDTO> getEmployees() 
+    {
+    	List<TravellerDTO> list = new ArrayList<TravellerDTO>();
+    	list.add(new TravellerDTO(1,"Jenelee","B","Jenelee@gmail.com"));
+    	list.add(new TravellerDTO(1,"Saransh","B","Saransh@gmail.com"));
+    	list.add(new TravellerDTO(1,"Maram","B","Maram@gmail.com"));
+    	list.add(new TravellerDTO(1,"Sai","B","Sai@gmail.com"));
+    
+        return list;
+    }
+    
+    
+    @GetMapping(path="/getEmployeesFromDb", produces = "application/json")
+    public List<Traveller> getEmployeesFromDb() 
+    {
+    	List<Traveller> list = new ArrayList<Traveller>();
+    	try {
+    		list=travellerService.listAllTravellers();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+    
+    
+        return list;
+    }
+
+    
+    @GetMapping(path="/getConfiguration", produces = "application/json")
+    public String getConfiguration() 
+    {
+    	return welcomeMessage;
+    }
+
+
+	@GetMapping(path="/getDataFromOthers", produces = "application/json")
+	public List<Employee> getDataFromOthers()
+	{
+		List<Employee> empl=travellerService.listAllEmployeers();
+		return empl;
+	}
+
+
+
+  }
